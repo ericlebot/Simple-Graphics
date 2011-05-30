@@ -3,8 +3,19 @@
     <head>
         <meta charset="utf-8">
         <title>Simple Graphics</title>
-		<script type="text/javascript" src="jquery-1.6.1.js"></script>
+		<script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
 		<script type="text/javascript" src="js/simplegraphics.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var context = document.getElementById('scene').getContext('2d');
+				sg = new SimpleGraphics(context);
+				sg.ressourceManager.loadQueue.push({ name: "github", path: "img/github.png" });
+				sg.ressourceManager.load(function() {
+					sg.draw();
+				});
+				sg.entities.push({ image: "github", x: 10, y: 10, width: 128, height: 128, remove: false });
+			});
+		</script>
     </head>
     <body>
         <canvas id="scene" width="640" height="400" />
