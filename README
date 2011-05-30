@@ -1,0 +1,11 @@
+Simple Graphics
+HTML5 simple graphic engine
+
+Copyright 2011, Eric Le Bot
+
+Inspired by Seth Ladd's presentation on HTML5 games
+http://blog.sethladd.com/2011/05/source-code-slides-and-video-for-html5.html
+
+-- Compatibility --
+
+Works on Chrome 11
