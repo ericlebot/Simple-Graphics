@@ -9,7 +9,7 @@
  */
  
  // Allow ressources (sprites, sounds, data, ...) importation and cache
- RessourceManager() {
+ function RessourceManager() {
 	this.cache = {};
 	this.loadQueue = [];
 	this.successCount = 0;
@@ -18,52 +18,55 @@
 
 // Load and add images to cache
 RessourceManager.prototype.load = function(callback) {
-	if(this.loadQueue.length
-	for (var i = 0; i < this.loadQueue.length; i++) 
-		var ressource = this.loadQueue.[i];
-		
-		var path = ressource.path;
-		var name = ressource.name;
-		
-		var img = new Image();
-		this.cache[name] = { path: path, img: img, loaded: null };
-		
-		var that = this;
-		img.addEventListener('load',function() {
-			console.log(path + " is loaded.");
-			that.successCount += 1;
-			that.cache[name].loaded = true;
-			that.finish();
-		}, false);
-		img.addEventListener('error',function() {
-			console.error(path + " is not loaded. An error occured.");
-			that.errorCount += 1;
-			that.cache[name].loaded = false;
-			that.finish();
-		}, false);
-		
-		img.src = path;
+	if(this.loadQueue.length == 0) callback();
+	else {
+		for (var i = 0; i < this.loadQueue.length; i++) {
+			var ressource = this.loadQueue[i];
+			
+			var path = ressource.path;
+			var name = ressource.name;
+			
+			var img = new Image();
+			this.cache[name] = { path: path, img: img, loaded: null };
+			
+			var that = this;
+			img.addEventListener('load',function() {
+				console.log(path + " is loaded.");
+				that.successCount += 1;
+				that.cache[name].loaded = true;
+				that.finish(callback);
+			}, false);
+			img.addEventListener('error',function() {
+				console.error(path + " is not loaded. An error occured.");
+				that.errorCount += 1;
+				that.cache[name].loaded = false;
+				that.finish(callback);
+			}, false);
+			
+			img.src = path;
+		}
 	}
 }
 
 // Return if whether or not loading is complete
-RessoureManager.prototype.done = function() {
+RessourceManager.prototype.done = function() {
 	return (this.loadQueue.length == (this.successCount + this.errorCount));
 }
 
 // Display loading stats and clear load
-RessourceManager.prototype.finish = function() {
+RessourceManager.prototype.finish = function(callback) {
 	if(this.done()) {
-		console.log("Loading finished.\n" + this.successCount + " ressources loaded, " + this.errorCount + " ressources not loaded.");
+		console.log("Loading finished.\n" + this.successCount + " ressource(s) loaded, " + this.errorCount + " ressource(s) not loaded.");
 		this.loadQueue = [];
 		this.successCount = 0;
 		this.errorCount = 0;
+		callback();
 	}
 }
 
 // Return a ressource
 RessourceManager.prototype.get = function(ressource) {
-	return (ressource && this.cache[ressource] && this.cache[ressource].loaded == true) ? this.cache[ressource].img : null;
+	return (ressource != null && this.cache[ressource] != null && this.cache[ressource].loaded == true) ? this.cache[ressource].img : null;
 }
 
 // Base
